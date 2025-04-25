@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Health - Breast Cancer Signs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== Global Styles ===== */
+        :root {
+            --primary: #2c7be5;
+            --primary-dark: #1a68d1;
+            --secondary: #e63946;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #495057;
+            --text-color: #212529;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 6px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-gray);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: #c1121f;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+
+        /* ===== Header & Navigation ===== */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo-text span {
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            padding: 5px 0;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* ===== Main Content ===== */
+        main {
+            padding: 40px 0;
+            min-height: calc(100vh - 150px);
+        }
+
+        /* Content Sections */
+        .content-section {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .content-section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            position: relative;
+            padding-bottom: 8px;
+        }
+
+        .content-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--secondary);
+        }
+
+        .bullet-list {
+            margin-left: 20px;
+        }
+
+        .bullet-list li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 25px;
+            list-style-type: none;
+        }
+
+        .bullet-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-size: 1.2rem;
+        }
+
+        .bullet-list p {
+            margin-left: 15px;
+            font-size: 0.95rem;
+            color: var(--dark-gray);
+            margin-top: 5px;
+        }
+
+        /* Image styling */
+        .image-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .content-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .content-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Language Selector */
+        .language-selector {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .language-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: var(--radius);
+            margin-left: 5px;
+            font-weight: 600;
+        }
+
+        .language-btn.active {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        /* Offline Indicator */
+        .offline-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--secondary);
+            color: var(--white);
+            padding: 10px 15px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: none;
+            z-index: 1000;
+        }
+
+        /* ===== Footer ===== */
+        footer {
+            background-color: var(--primary-dark);
+            color: var(--white);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* ===== Animations ===== */
+        .fade-in {
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <span class="logo-text">Community<span>Health</span></span>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="#" class="active">Signs</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Language Selector -->
+        <div class="language-selector">
+            <button class="language-btn active" data-lang="english">English</button>
+            <button class="language-btn" data-lang="hindi">हिन्दी</button>
+            <button class="language-btn" data-lang="kannada">ಕನ್ನಡ</button>
+        </div>
+
+        <h1 class="section-title" data-i18n="title">Signs and Prevention of Breast Cancer</h1>
+
+        <!-- Symptoms Section -->
+        <section class="content-section fade-in">
+            <h2 data-i18n="symptomsTitle">Symptoms of Breast Cancer</h2>
+            <ul class="bullet-list">
+                <li data-i18n="symptom1">A lump or hard ball in the breast or under the arm.</li>
+                <li data-i18n="symptom2">Swelling or Big size in breast.</li>
+                <li data-i18n="symptom3">Skin looks bumpy or rough like Orange</li>
+                <li data-i18n="symptom4">Water, Blood, or Other liquid coming out of nipple</li>
+                <li data-i18n="symptom5">Nipple goes inside or looks pulled in</li>
+                <li data-i18n="symptom6">Red, dry or flaky skin on the breast or the nipple</li>
+                <li data-i18n="symptom7">Pain in breast never goes away</li>
+                <li data-i18n="symptom8">Swelling near the armpit or neck</li>
+            </ul>
+        </section>
+
+        <!-- Signs Image Section -->
+        <section class="content-section fade-in">
+            <h2 data-i18n="signsTitle">Signs of breast cancer</h2>
+            <div class="image-container">
+                <img src="images/signs.jpg" alt="Signs of breast cancer" class="content-image" data-i18n-alt="signsAlt">
+            </div>
+        </section>
+
+        <!-- Prevention Section -->
+        <section class="content-section fade-in">
+            <h2 data-i18n="preventionTitle">Measures to avoid breast cancer</h2>
+            <ul class="bullet-list">
+                <li data-i18n="prevention1">Check your breasts every month</li>
+                <p data-i18n="prevention1Detail">– Feel for any new lumps or changes.</p>
+                <li data-i18n="prevention2">Eat healthy and stay active</li>
+                <p data-i18n="prevention2Detail">– More fruits and veggies, and daily walking or exercise.</p>
+                <li data-i18n="prevention3">Keep a healthy weight</li>
+                <p data-i18n="prevention3Detail">– Extra weight can increase your risk.</p>
+                <li data-i18n="prevention4">Go for regular checkups</li>
+                <p data-i18n="prevention4Detail">– Early detection can save your life.</p>
+            </ul>
+        </section>
+
+        <!-- Prevention Image Section -->
+        <section class="content-section fade-in">
+            <h2 data-i18n="preventionImageTitle">Preventive Measures</h2>
+            <div class="image-container">
+                <img src="images/prevention.jpg" alt="Preventive measures for breast cancer" class="content-image" data-i18n-alt="preventionAlt">
+            </div>
+        </section>
+    </main>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offlineIndicator">
+        <i class="fas fa-wifi"></i> <span data-i18n="offlineMessage">Working offline - data will sync when connection returns</span>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Community Health Breast Cancer Screening | For ASHA/Anganwadi Workers</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const languageBtns = document.querySelectorAll('.language-btn');
+            const offlineIndicator = document.getElementById('offlineIndicator');
+
+            // Enhanced translations object
+            const translations = {
+                english: {
+                    title: "Signs and Prevention of Breast Cancer",
+                    symptomsTitle: "Symptoms of Breast Cancer",
+                    symptom1: "A lump or hard ball in the breast or under the arm.",
+                    symptom2: "Swelling or Big size in breast.",
+                    symptom3: "Skin looks bumpy or rough like Orange",
+                    symptom4: "Water, Blood, or Other liquid coming out of nipple",
+                    symptom5: "Nipple goes inside or looks pulled in",
+                    symptom6: "Red, dry or flaky skin on the breast or the nipple",
+                    symptom7: "Pain in breast never goes away",
+                    symptom8: "Swelling near the armpit or neck",
+                    signsTitle: "Signs of breast cancer",
+                    signsAlt: "Signs of breast cancer",
+                    preventionTitle: "Measures to avoid breast cancer",
+                    prevention1: "Check your breasts every month",
+                    prevention1Detail: "– Feel for any new lumps or changes.",
+                    prevention2: "Eat healthy and stay active",
+                    prevention2Detail: "– More fruits and veggies, and daily walking or exercise.",
+                    prevention3: "Keep a healthy weight",
+                    prevention3Detail: "– Extra weight can increase your risk.",
+                    prevention4: "Go for regular checkups",
+                    prevention4Detail: "– Early detection can save your life.",
+                    preventionImageTitle: "Preventive Measures",
+                    preventionAlt: "Preventive measures for breast cancer",
+                    offlineMessage: "Working offline - data will sync when connection returns"
+                },
+                hindi: {
+                    title: "स्तन कैंसर के लक्षण और रोकथाम",
+                    symptomsTitle: "स्तन कैंसर के लक्षण",
+                    symptom1: "स्तन या बांह के नीचे गांठ या सख्त गोला।",
+                    symptom2: "स्तन में सूजन या बड़ा आकार।",
+                    symptom3: "त्वचा संतरे की तरह उबड़-खाबड़ या खुरदरी दिखती है",
+                    symptom4: "निप्पल से पानी, खून या अन्य तरल पदार्थ निकलना",
+                    symptom5: "निप्पल अंदर चला जाता है या अंदर खींचा हुआ दिखता है",
+                    symptom6: "स्तन या निप्पल पर लाल, सूखी या परतदार त्वचा",
+                    symptom7: "स्तन में दर्द कभी दूर नहीं होता",
+                    symptom8: "बांह के नीचे या गर्दन के पास सूजन",
+                    signsTitle: "स्तन कैंसर के संकेत",
+                    signsAlt: "स्तन कैंसर के संकेत",
+                    preventionTitle: "स्तन कैंसर से बचने के उपाय",
+                    prevention1: "हर महीने अपने स्तनों की जांच करें",
+                    prevention1Detail: "– किसी भी नई गांठ या बदलाव के लिए महसूस करें।",
+                    prevention2: "स्वस्थ खाएं और सक्रिय रहें",
+                    prevention2Detail: "– अधिक फल और सब्जियां, और दैनिक चलना या व्यायाम।",
+                    prevention3: "स्वस्थ वजन बनाए रखें",
+                    prevention3Detail: "– अतिरिक्त वजन आपके जोखिम को बढ़ा सकता है।",
+                    prevention4: "नियमित जांच के लिए जाएं",
+                    prevention4Detail: "– शीघ्र पता लगाने से आपकी जान बच सकती है।",
+                    preventionImageTitle: "निवारक उपाय",
+                    preventionAlt: "स्तन कैंसर के लिए निवारक उपाय",
+                    offlineMessage: "ऑफलाइन काम कर रहे हैं - कनेक्शन वापस आने पर डेटा सिंक हो जाएगा"
+                },
+                kannada: {
+                    title: "ಸ್ತನ ಕ್ಯಾನ್ಸರ್ ಚಿಹ್ನೆಗಳು ಮತ್ತು ತಡೆಗಟ್ಟುವಿಕೆ",
+                    symptomsTitle: "ಸ್ತನ ಕ್ಯಾನ್ಸರ್ ರೋಗಲಕ್ಷಣಗಳು",
+                    symptom1: "ಸ್ತನದಲ್ಲಿ ಅಥವಾ ತೋಳಿನ ಕೆಳಗೆ ಗಂಟು ಅಥವಾ ಗಟ್ಟಿಯಾದ ಚೆಂಡು.",
+                    symptom2: "ಸ್ತನದಲ್ಲಿ ಊತ ಅಥವಾ ದೊಡ್ಡ ಗಾತ್ರ.",
+                    symptom3: "ಚರ್ಮ ಕಿತ್ತಳೆ ಹಣ್ಣಿನಂತೆ ಗಂಟುಗಂಟಾದ ಅಥವಾ ಒರಟಾಗಿ ಕಾಣುತ್ತದೆ",
+                    symptom4: "ಮೊಲೆತೊಟ್ಟಿನಿಂದ ನೀರು, ರಕ್ತ ಅಥವಾ ಇತರ ದ್ರವ ಹೊರಬರುವುದು",
+                    symptom5: "ಮೊಲೆತೊಟ್ಟು ಒಳಗೆ ಹೋಗುತ್ತದೆ ಅಥವಾ ಎಳೆದುಕೊಂಡಂತೆ ಕಾಣುತ್ತದೆ",
+                    symptom6: "ಸ್ತನ ಅಥವಾ ಮೊಲೆತೊಟ್ಟಿನ ಮೇಲೆ ಕೆಂಪು, ಒಣ ಅಥವಾ ಸಿಪ್ಪೆ ಸಿಪ್ಪೆಯಾದ ಚರ್ಮ",
+                    symptom7: "ಸ್ತನದಲ್ಲಿ ನೋವು ಎಂದಿಗೂ ಹೋಗುವುದಿಲ್ಲ",
+                    symptom8: "ತೋಳಿನ ಕೆಳಗೆ ಅಥವಾ ಕುತ್ತಿಗೆಯ ಬಳಿ ಊತ",
+                    signsTitle: "ಸ್ತನ ಕ್ಯಾನ್ಸರ್ ಚಿಹ್ನೆಗಳು",
+                    signsAlt: "ಸ್ತನ ಕ್ಯಾನ್ಸರ್ ಚಿಹ್ನೆಗಳು",
+                    preventionTitle: "ಸ್ತನ ಕ್ಯಾನ್ಸರ್ ತಪ್ಪಿಸುವ ಕ್ರಮಗಳು",
+                    prevention1: "ಪ್ರತಿ ತಿಂಗಳು ನಿಮ್ಮ ಸ್ತನಗಳನ್ನು ಪರಿಶೀಲಿಸಿ",
+                    prevention1Detail: "– ಯಾವುದೇ ಹೊಸ ಗಂಟುಗಳು ಅಥವಾ ಬದಲಾವಣೆಗಳಿಗಾಗಿ ಅನುಭವಿಸಿ.",
+                    prevention2: "ಆರೋಗ್ಯಕರವಾಗಿ ತಿನ್ನಿರಿ ಮತ್ತು ಸಕ್ರಿಯವಾಗಿರಿ",
+                    prevention2Detail: "– ಹೆಚ್ಚು ಹಣ್ಣುಗಳು ಮತ್ತು ತರಕಾರಿಗಳು, ಮತ್ತು ದೈನಂದಿನ ನಡಿಗೆ ಅಥವಾ ವ್ಯಾಯಾಮ.",
+                    prevention3: "ಆರೋಗ್ಯಕರ ತೂಕವನ್ನು ನಿರ್ವಹಿಸಿ",
+                    prevention3Detail: "– ಹೆಚ್ಚುವರಿ ತೂಕವು ನಿಮ್ಮ ಅಪಾಯವನ್ನು ಹೆಚ್ಚಿಸಬಹುದು.",
+                    prevention4: "ನಿಯಮಿತ ಪರಿಶೀಲನೆಗೆ ಹೋಗಿ",
+                    prevention4Detail: "– ಆರಂಭಿಕ ಪತ್ತೆಯು ನಿಮ್ಮ ಜೀವವನ್ನು ಉಳಿಸಬಹುದು.",
+                    preventionImageTitle: "ನಿವಾರಣಾ ಕ್ರಮಗಳು",
+                    preventionAlt: "ಸ್ತನ ಕ್ಯಾನ್ಸರ್ ತಡೆಗಟ್ಟುವ ಕ್ರಮಗಳು",
+                    offlineMessage: "ಆಫ್ಲೈನ್‌ನಲ್ಲಿ ಕೆಲಸ ಮಾಡುತ್ತಿದೆ - ಸಂಪರ್ಕ ಹಿಂತಿರುಗಿದಾಗ ಡೇಟಾ ಸಿಂಕ್ ಆಗುತ್ತದೆ"
+                }
+            };
+
+            // Language selector functionality
+            languageBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    languageBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    updateTranslations(this.dataset.lang);
+                });
+            });
+
+            // Function to update translations
+            function updateTranslations(lang) {
+                const langData = translations[lang];
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (langData[key]) {
+                        element.textContent = langData[key];
+                    }
+                });
+
+                // Update image alt texts
+                document.querySelectorAll('[data-i18n-alt]').forEach(element => {
+                    const key = element.getAttribute('data-i18n-alt');
+                    if (langData[key]) {
+                        element.alt = langData[key];
+                    }
+                });
+            }
+
+            // Offline detection
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+            
+            function updateOnlineStatus() {
+                if (!navigator.onLine) {
+                    offlineIndicator.style.display = 'block';
+                } else {
+                    offlineIndicator.style.display = 'none';
+                }
+            }
+            
+            // Check initial status
+            updateOnlineStatus();
+
+            // Initialize with English translations
+            updateTranslations('english');
+        });
+    </script>
+</body>
+
+</html>

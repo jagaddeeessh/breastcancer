@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Breast Cancer Specialists</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reuse your existing styles where possible */
+        :root {
+            --primary: #2c7be5;
+            --primary-dark: #1a68d1;
+            --secondary: #e63946;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #495057;
+            --text-color: #212529;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 6px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-gray);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 15px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo-text span {
+            color: var(--secondary);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+
+        /* Doctor Cards */
+        .doctor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .doctor-card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .doctor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .doctor-image {
+            height: 200px;
+            background-color: var(--medium-gray);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .doctor-details {
+            padding: 20px;
+        }
+
+        .doctor-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .doctor-specialty {
+            color: var(--secondary);
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .doctor-info {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .doctor-info i {
+            color: var(--primary);
+            width: 20px;
+            text-align: center;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .stars {
+            color: #ffc107;
+            margin-right: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.95rem;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            box-shadow: var(--shadow);
+        }
+
+        .location-info {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .location-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .location-details {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        footer {
+            background-color: var(--primary-dark);
+            color: var(--white);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .doctor-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+        
+    </style>
+</head>
+
+<body>
+    <!-- Main Content -->
+    <main class="container">
+        <section>
+            <h2 class="section-title">Recommended Breast Cancer Specialists</h2>
+
+            <div class="location-info" id="locationInfo">
+                <div class="location-title">Showing doctors near:</div>
+                <div class="location-details" id="locationDetails">Loading location...</div>
+            </div>
+
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>Finding the best specialists in your area...</p>
+            </div>
+
+            <div class="doctor-grid" id="doctorGrid"></div>
+
+            <div id="noDoctorsMessage" style="display: none; text-align: center; padding: 30px;">
+                <h3>No specialists found in your immediate area</h3>
+                <p>We couldn't find breast cancer specialists in your district. Try expanding your search to nearby
+                    districts or consult with your local healthcare provider for referrals.</p>
+                <button class="btn btn-primary" id="expandSearchBtn">Search Nearby Districts</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Community Health Breast Cancer Screening | Doctor Referral Service</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Get location from URL parameters (simulating data passed from index.html)
+            const urlParams = new URLSearchParams(window.location.search);
+            const village = urlParams.get('village') || 'Your Village';
+            const taluk = urlParams.get('taluk') || 'Your Taluk';
+            const district = urlParams.get('district') || 'Your District';
+            const state = urlParams.get('state') || 'Your State';
+
+            // Display location
+            document.getElementById('locationDetails').textContent = `${village}, ${taluk}, ${district}, ${state}`;
+
+            // Simulate API call to get doctors (in a real app, this would be a fetch request)
+            setTimeout(() => {
+                document.getElementById('loadingIndicator').style.display = 'none';
+
+                // Sample doctor data - in a real app, this would come from a database
+                const doctors = getDoctorsByLocation(district, state);
+
+                if (doctors.length > 0) {
+                    displayDoctors(doctors);
+                } else {
+                    document.getElementById('noDoctorsMessage').style.display = 'block';
+                }
+            }, 1500);
+
+            // Expand search button handler
+            document.getElementById('expandSearchBtn').addEventListener('click', function () {
+                document.getElementById('noDoctorsMessage').style.display = 'none';
+                document.getElementById('loadingIndicator').style.display = 'block';
+
+                // Simulate expanded search
+                setTimeout(() => {
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                    const expandedDoctors = getNearbyDoctors(district, state);
+                    displayDoctors(expandedDoctors);
+
+                    // Update location info
+                    document.getElementById('locationDetails').textContent =
+                        `Near ${district}, ${state} (expanded search)`;
+                }, 1500);
+            });
+
+            // Function to display doctors
+            function displayDoctors(doctors) {
+                const doctorGrid = document.getElementById('doctorGrid');
+                doctorGrid.innerHTML = '';
+
+                doctors.forEach(doctor => {
+                    const card = document.createElement('div');
+                    card.className = 'doctor-card';
+                    card.innerHTML = `
+                        <div class="doctor-details">
+                            <h3 class="doctor-name">${doctor.name}</h3>
+                            <p class="doctor-specialty">${doctor.specialty}</p>
+                            <p class="doctor-info"><i class="fas fa-hospital"></i> ${doctor.hospital}</p>
+                            <p class="doctor-info"><i class="fas fa-map-marker-alt"></i> ${doctor.location}</p>
+                            <p class="doctor-info"><i class="fas fa-phone"></i> ${doctor.phone}</p>
+                            <div class="rating">
+                                <div class="stars">
+                                    ${'<i class="fas fa-star"></i>'.repeat(doctor.rating)}
+                                    ${doctor.rating < 5 ? '<i class="far fa-star"></i>'.repeat(5 - doctor.rating) : ''}
+                                </div>
+                                <span>${doctor.rating}.0 (${doctor.reviews} reviews)</span>
+                            </div>
+                            <button class="btn btn-primary">Book Appointment</button>
+                        </div>
+                    `;
+                    doctorGrid.appendChild(card);
+                });
+            }
+
+            // Sample data functions - in a real app, these would be API calls
+            function getDoctorsByLocation(district, state) {
+                // This is a mock database - in reality you would query a real database
+                const doctorDatabase = {
+                    "Bangalore": [
+                        {
+                            name: "Dr. Priya Sharma",
+                            specialty: "Oncologist (Breast Cancer Specialist)",
+                            hospital: "Bangalore Cancer Institute",
+                            location: "HSR Layout, Bangalore",
+                            phone: "+91 9876543210",
+                            rating: 5,
+                            reviews: 124,
+                        },
+                        {
+                            name: "Dr. Rajesh Kumar",
+                            specialty: "Surgical Oncologist",
+                            hospital: "Manipal Hospital",
+                            location: "Whitefield, Bangalore",
+                            phone: "+91 8765432109",
+                            rating: 4,
+                            reviews: 89,
+                        }
+                    ],
+                    "Bagalkote": [
+                        {
+                            "name": "Dr. Vikram Joshi",
+                            "specialty": "Breast Cancer Surgeon",
+                            "hospital": "Bagalkote Cancer Care Center",
+                            "location": "Bagalkote City",
+                            "phone": "+91 9876543210",
+                            "rating": 4.8,
+                            "reviews": 45
+                        }
+                    ],
+                    "Ballari": [
+                        {
+                            "name": "Dr. Priya Reddy",
+                            "specialty": "Oncologist (Breast Cancer)",
+                            "hospital": "Ballari Oncology Hospital",
+                            "location": "Ballari Main Road",
+                            "phone": "+91 8765432109",
+                            "rating": 4.7,
+                            "reviews": 52
+                        }
+                    ],
+                    "Belagavi": [
+                        {
+                            "name": "Dr. Sameer Patil",
+                            "specialty": "Surgical Oncologist",
+                            "hospital": "Belagavi Cancer Institute",
+                            "location": "Khanapur Road",
+                            "phone": "+91 7654321098",
+                            "rating": 4.9,
+                            "reviews": 68
+                        }
+                    ],
+                    "Bengaluru Rural": [
+                        {
+                            "name": "Dr. Ananya Shetty",
+                            "specialty": "Breast Cancer Specialist",
+                            "hospital": "Rural Bengaluru Cancer Clinic",
+                            "location": "Nelamangala",
+                            "phone": "+91 6543210987",
+                            "rating": 4.6,
+                            "reviews": 34
+                        }
+                    ],
+                    "Bengaluru Urban": [
+                        {
+                            "name": "Dr. Arjun Malhotra",
+                            "specialty": "Breast Cancer Surgeon",
+                            "hospital": "Bangalore Oncology Center",
+                            "location": "Indiranagar",
+                            "phone": "+91 9432109876",
+                            "rating": 4.9,
+                            "reviews": 120
+                        }
+                    ],
+                    "Bidar": [
+                        {
+                            "name": "Dr. Ramesh Kumar",
+                            "specialty": "Medical Oncologist (Breast Cancer)",
+                            "hospital": "Bidar Cancer Hospital",
+                            "location": "Bidar City",
+                            "phone": "+91 8321098765",
+                            "rating": 4.5,
+                            "reviews": 28
+                        }
+                    ],
+                    "Chamarajanagar": [
+                        {
+                            "name": "Dr. Kavya Iyer",
+                            "specialty": "Breast Cancer Specialist",
+                            "hospital": "Chamaraj Cancer Care",
+                            "location": "Chamarajanagar Town",
+                            "phone": "+91 7210987654",
+                            "rating": 4.4,
+                            "reviews": 22
+                        }
+                    ],
+                    "Chikkaballapura": [
+                        {
+                            "name": "Dr. Sanjay Rao",
+                            "specialty": "Surgical Oncologist",
+                            "hospital": "Chikkaballapura Oncology Center",
+                            "location": "Chikkaballapura Main",
+                            "phone": "+91 6109876543",
+                            "rating": 4.3,
+                            "reviews": 19
+                        }
+                    ],
+                    "Chikkamagaluru": [
+                        {
+                            "name": "Dr. Meera Bhat",
+                            "specialty": "Breast Cancer Surgeon",
+                            "hospital": "Chikkamagaluru Oncology Center",
+                            "location": "MG Road, Chikkamagaluru",
+                            "phone": "+91 9876543210",
+                            "rating": 4.7,
+                            "reviews": 38
+                        }
+                    ],
+                    "Chitradurga": [
+                        {
+                            "name": "Dr. Ravi Shastry",
+                            "specialty": "Oncologist (Breast Cancer)",
+                            "hospital": "Chitradurga Cancer Hospital",
+                            "location": "Fort Road, Chitradurga",
+                            "phone": "+91 8765432109",
+                            "rating": 4.5,
+                            "reviews": 42
+                        }
+                    ],
+                    "Dakshina Kannada": [
+                        {
+                            "name": "Dr. Nandini Pai",
+                            "specialty": "Surgical Oncologist",
+                            "hospital": "Mangalore Cancer Institute",
+                            "location": "Kankanady, Mangaluru",
+                            "phone": "+91 7654321098",
+                            "rating": 4.8,
+                            "reviews": 75
+                        }
+                    ],
+                    "Davanagere": [
+                        {
+                            "name": "Dr. Suresh Patel",
+                            "specialty": "Breast Cancer Specialist",
+                            "hospital": "Davanagere Oncology Clinic",
+                            "location": "PJ Extension, Davanagere",
+                            "phone": "+91 6543210987",
+                            "rating": 4.6,
+                            "reviews": 50
+                        }
+                    ],
+                    "Dharwad": [
+                        {
+                            "name": "Dr. Anjali Deshpande",
+                            "specialty": "Medical Oncologist (Breast Cancer)",
+                            "hospital": "SDM Cancer Hospital",
+                            "location": "Sattur, Dharwad",
+                            "phone": "+91 9432109876",
+                            "rating": 4.9,
+                            "reviews": 65
+                        }
+                    ],
+                    "Gadag": [
+                        {
+                            "name": "Dr. Kiran Kulkarni",
+                            "specialty": "Breast Cancer Surgeon",
+                            "hospital": "Gadag Cancer Care",
+                            "location": "Gadag City",
+                            "phone": "+91 8321098765",
+                            "rating": 4.4,
+                            "reviews": 30
+                        }
+                    ],
+                    "Hassan": [
+                        {
+                            "name": "Dr. Vikram Shenoy",
+                            "specialty": "Oncologist (Breast Cancer)",
+                            "hospital": "Hassan Oncology Center",
+                            "location": "Hassan Main Road",
+                            "phone": "+91 7210987654",
+                            "rating": 4.7,
+                            "reviews": 55
+                        }
+                    ],
+                    "Haveri": [
+                        {
+                            "name": "Dr. Sunita Rao",
+                            "specialty": "Surgical Oncologist",
+                            "hospital": "Haveri Cancer Hospital",
+                            "location": "Haveri Town",
+                            "phone": "+91 6109876543",
+                            "rating": 4.3,
+                            "reviews": 25
+                        }
+                    ],
+                    "Kalaburagi": [
+                        {
+                            "name": "Dr. Rajeshwar Reddy",
+                            "specialty": "Breast Cancer Specialist",
+                            "hospital": "Kalaburagi Cancer Institute",
+                            "location": "Sedam Road, Kalaburagi",
+                            "phone": "+91 5987654321",
+                            "rating": 4.8,
+                            "reviews": 60
+                        }
+                    ],
+                    "Kodagu": [
+                        {
+                            "name": "Dr. Deepa Muthanna",
+                            "specialty": "Breast Cancer Surgeon",
+                            "hospital": "Kodagu Oncology Center",
+                            "location": "Madikeri, Kodagu",
+                            "phone": "+91 4876543210",
+                            "rating": 4.6,
+                            "reviews": 40
+                        }
+                    ],
+                    "Kolar": [
+                        {
+                            "name": "Dr. Srinivas Reddy",
+                            "specialty": "Surgical Oncologist (Breast Cancer)",
+                            "hospital": "Kolar Cancer Care Center",
+                            "location": "Kolar Gold Fields Road",
+                            "phone": "+91 9876501234",
+                            "rating": 4.6,
+                            "reviews": 48
+                        }
+                    ],
+                    "Koppal": [
+                        {
+                            "name": "Dr. Geeta Patil",
+                            "specialty": "Medical Oncologist",
+                            "hospital": "Koppal Oncology Hospital",
+                            "location": "Station Road, Koppal",
+                            "phone": "+91 8765412345",
+                            "rating": 4.4,
+                            "reviews": 35
+                        }
+                    ],
+                    "Mandya": [
+                        {
+                            "name": "Dr. Mahesh Gowda",
+                            "specialty": "Breast Cancer Surgeon",
+                            "hospital": "Mandya Cancer Institute",
+                            "location": "Bharath Hospital Campus",
+                            "phone": "+91 7654323456",
+                            "rating": 4.7,
+                            "reviews": 52
+                        }
+                    ],
+                    "Mysuru": [
+                        {
+                            "name": "Dr. Ananya Rao",
+                            "specialty": "Onco-Surgeon (Breast Specialist)",
+                            "hospital": "Mysore Cancer Center",
+                            "location": "Kuvempunagar, Mysuru",
+                            "phone": "+91 6543234567",
+                            "rating": 4.9,
+                            "reviews": 112
+                        }
+                    ],
+                    "Raichur": [
+                        {
+                            "name": "Dr. Irfan Ahmed",
+                            "specialty": "Radiation Oncologist",
+                            "hospital": "Raichur Cancer Clinic",
+                            "location": "Hyderabad-Karnataka Highway",
+                            "phone": "+91 5432145678",
+                            "rating": 4.5,
+                            "reviews": 40
+                        }
+                    ],
+                    "Ramanagara": [
+                        {
+                            "name": "Dr. Kavitha Ramesh",
+                            "specialty": "Breast Cancer Specialist",
+                            "hospital": "Ramanagara Oncology Unit",
+                            "location": "Bangalore-Mysore Road",
+                            "phone": "+91 4321567890",
+                            "rating": 4.3,
+                            "reviews": 28
+                        }
+                    ],
+                    "Shivamogga": [
+                        {
+                            "name": "Dr. Prakash Hegde",
+                            "specialty": "Surgical Oncologist",
+                            "hospital": "Shimoga Cancer Hospital",
+                            "location": "Gopi Circle, Shimoga",
+                            "phone": "+91 3215678901",
+                            "rating": 4.8,
+                            "reviews": 65
+                        }
+                    ],
+                    "Tumkur": [
+                        {
+                            "name": "Dr. Shweta Desai",
+                            "specialty": "Medical Oncologist (Breast Cancer)",
+                            "hospital": "Tumkur Oncology Center",
+                            "location": "B.H. Road, Tumkur",
+                            "phone": "+91 2106789012",
+                            "rating": 4.6,
+                            "reviews": 45
+                        }
+                    ],
+                    "Udupi": [
+                        {
+                            "name": "Dr. Rajesh Pai",
+                            "specialty": "Breast Cancer Surgeon",
+                            "hospital": "Udupi Memorial Cancer Hospital",
+                            "location": "Kunjibettu, Udupi",
+                            "phone": "+91 1097890123",
+                            "rating": 4.7,
+                            "reviews": 58
+                        }
+                    ],
+                    "Uttara Kannada": [
+                        {
+                            "name": "Dr. Sanjana Kamath",
+                            "specialty": "Oncologist (Breast Cancer)",
+                            "hospital": "Karwar Cancer Care",
+                            "location": "Kodibag, Karwar",
+                            "phone": "+91 9876543210",
+                            "rating": 4.5,
+                            "reviews": 42
+                        }
+                    ],
+                    "Vijayanagara": [
+                        {
+                            "name": "Dr. Karthik Malhotra",
+                            "specialty": "Surgical Oncologist (Breast Cancer)",
+                            "hospital": "Vijayanagara Cancer Center",
+                            "location": "Hospet Main Road",
+                            "phone": "+91 9876543201",
+                            "rating": 4.7,
+                            "reviews": 55
+                        }
+                    ],
+                    "Vijayapura": [
+                        {
+                            "name": "Dr. Fatima Khan",
+                            "specialty": "Medical Oncologist",
+                            "hospital": "Vijayapura Oncology Hospital",
+                            "location": "Station Road, Vijayapura",
+                            "phone": "+91 8765432102",
+                            "rating": 4.5,
+                            "reviews": 42
+                        }
+                    ],
+                    "Yadgir": [
+                        {
+                            "name": "Dr. Rameshwar Patil",
+                            "specialty": "Breast Cancer Specialist",
+                            "hospital": "Yadgir Cancer Care Unit",
+                            "location": "Yadgir City Center",
+                            "phone": "+91 7654321032",
+                            "rating": 4.3,
+                            "reviews": 30
+                        }
+                    ],
+                    "Delhi": [
+                        {
+                            name: "Dr. Sanjay Gupta",
+                            specialty: "Oncologist",
+                            hospital: "AIIMS Delhi",
+                            location: "Ansari Nagar, Delhi",
+                            phone: "+91 6543210987",
+                            rating: 4,
+                            reviews: 156,
+                        },
+                        {
+                            name: "Dr. Neha Patel",
+                            specialty: "Radiation Oncologist",
+                            hospital: "Max Super Specialty Hospital",
+                            location: "Saket, Delhi",
+                            phone: "+91 9432109876",
+                            rating: 5,
+                            reviews: 92,
+                        }
+                    ]
+                };
+
+                // Return doctors for the district if found, or empty array
+                return doctorDatabase[district] || [];
+            }
+
+            function getNearbyDoctors(district, state) {
+                // This would normally query a larger radius
+                // For demo, we'll return some nearby doctors
+                return [
+                    {
+                        name: "Dr. Vikram Singh",
+                        specialty: "Oncologist",
+                        hospital: "City Cancer Center",
+                        location: `Near ${district}`,
+                        phone: "+91 8321098765",
+                        rating: 4,
+                        reviews: 67,
+                    },
+                    {
+                        name: "Dr. Sunita Reddy",
+                        specialty: "Breast Cancer Specialist",
+                        hospital: "Regional Medical College",
+                        location: `Adjacent to ${district}`,
+                        phone: "+91 7210987654",
+                        rating: 5,
+                        reviews: 112,
+                    }
+                ];
+            }
+        });
+    </script>
+</body>
+
+</html>

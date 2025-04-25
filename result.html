@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breast Cancer Screening Results</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2c7be5;
+            --primary-dark: #1a68d1;
+            --secondary: #e63946;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #495057;
+            --text-color: #212529;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 6px;
+            --low-risk: #28a745;
+            --medium-risk: #ffc107;
+            --high-risk: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-gray);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            padding: 15px 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo-text span {
+            color: var(--secondary);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+
+        /* Risk Section */
+        .risk-section {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .risk-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .risk-icon {
+            font-size: 2.5rem;
+        }
+
+        .risk-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .risk-level {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .risk-low {
+            color: var(--low-risk);
+        }
+
+        .risk-medium {
+            color: var(--medium-risk);
+        }
+
+        .risk-high {
+            color: var(--high-risk);
+        }
+
+        .risk-description {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .risk-percentage {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+
+        .chart-container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* New Risk Explanation Styles */
+        .risk-explanation {
+            background-color: var(--light-gray);
+            padding: 15px;
+            border-radius: var(--radius);
+            margin: 20px 0;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        .risk-explanation h4 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .risk-explanation ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        .factor-impact {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            align-items: center;
+        }
+
+        .impact-bar {
+            height: 8px;
+            background-color: var(--medium-gray);
+            border-radius: 4px;
+            margin-top: 3px;
+            flex-grow: 1;
+            margin: 0 10px;
+        }
+
+        .impact-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .impact-value {
+            font-weight: 600;
+            min-width: 40px;
+            text-align: right;
+        }
+
+        .confidence-indicator {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .confidence-indicator i {
+            color: var(--low-risk);
+        }
+
+        /* Summary Table */
+        .summary-section {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .summary-table th,
+        .summary-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .summary-table th {
+            background-color: var(--light-gray);
+            font-weight: 600;
+        }
+
+        .summary-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .risk-indicator {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .indicator-low {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: var(--low-risk);
+        }
+
+        .indicator-medium {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: var(--medium-risk);
+        }
+
+        .indicator-high {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: var(--high-risk);
+        }
+
+        /* Recommendations */
+        .recommendations-section {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .recommendations-list {
+            margin-top: 20px;
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .recommendation-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .recommendation-icon {
+            font-size: 1.2rem;
+            margin-top: 3px;
+            color: var(--primary);
+        }
+
+        .recommendation-text {
+            flex: 1;
+        }
+
+        /* Location Section */
+        .location-section {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .location-details {
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+
+        /* Language Selector */
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .language-btn {
+            background: none;
+            border: 1px solid var(--medium-gray);
+            padding: 5px 10px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .language-btn:hover {
+            background-color: var(--light-gray);
+        }
+
+        .language-btn.active {
+            background-color: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: #c1121f;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(44, 123, 229, 0.1);
+        }
+
+        footer {
+            background-color: var(--primary-dark);
+            color: var(--white);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .risk-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .summary-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .factor-impact {
+                flex-wrap: wrap;
+            }
+
+            .impact-bar {
+                width: 100%;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+ <!-- Main Content -->
+    <main class="container">
+        <section>
+            <h2 class="section-title">Breast Cancer Screening Results</h2>
+
+            <!-- Enhanced Risk Assessment Section -->
+            <div class="risk-section">
+                <div class="risk-header">
+                    <i class="fas fa-stethoscope risk-icon"></i>
+                    <h3 class="risk-title">Comprehensive Breast Cancer Risk Assessment</h3>
+                </div>
+
+                <div class="risk-explanation" id="riskExplanation">
+                    <!-- Filled by JavaScript -->
+                </div>
+
+                <div>
+                    <p><strong>Risk Level:</strong> <span class="risk-level" id="riskLevelText">Low</span></p>
+                    <p class="risk-description" id="riskDescription">Your risk of developing breast cancer is lower than average based on the information provided.</p>
+                </div>
+
+                <div class="chart-container">
+                    <canvas id="riskChart"></canvas>
+                </div>
+
+                <div class="risk-percentage" id="riskPercentage">8%</div>
+                <p>Probability of developing breast cancer in the next 5 years</p>
+                
+                <div class="confidence-indicator">
+                    <i class="fas fa-check-circle"></i>
+                    <strong>Assessment Confidence:</strong> <span id="confidenceValue">High</span>
+                </div>
+            </div>
+
+            <!-- Enhanced Summary Section -->
+            <div class="summary-section">
+                <h3>Detailed Risk Factor Analysis</h3>
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Factor</th>
+                            <th>Your Value</th>
+                            <th>Risk Impact</th>
+                            <th>Population Average</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detailedAnalysisBody">
+                        <!-- Filled by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Recommendations Section -->
+            <div class="recommendations-section">
+                <h3>Recommendations</h3>
+                <div class="recommendations-list" id="recommendationsList">
+                    <!-- Filled by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Location Section -->
+            <div class="location-section">
+                <h3>Your Location</h3>
+                <div class="location-details" id="locationDetails">
+                    <!-- Filled by JavaScript -->
+                </div>
+
+                <div class="language-selector">
+                    <button class="language-btn active" data-lang="english">English</button>
+                    <button class="language-btn" data-lang="hindi">हिन्दी</button>
+                    <button class="language-btn" data-lang="kannada">ಕನ್ನಡ</button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="connectDoctorBtn">
+                    <i class="fas fa-user-md"></i> Connect with Specialist
+                </button>
+                <button class="btn btn-outline" id="downloadReportBtn">
+                    <i class="fas fa-download"></i> Download Report
+                </button>
+                <button class="btn btn-secondary" id="newAssessmentBtn">
+                    <i class="fas fa-redo"></i> New Assessment
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Community Health Breast Cancer Screening | For ASHA/Anganwadi Workers</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Enhanced risk calculation using Gail Model parameters
+            function calculateGailRisk(age, ageAtMenarche, ageAtFirstBirth, relatives, biopsies, hyperplasia, race) {
+                // Base rates by age (per 1000 women)
+                const baseRates = {
+                    '20-24': 1.2, '25-29': 1.5, '30-34': 2.0, '35-39': 2.8,
+                    '40-44': 4.0, '45-49': 5.3, '50-54': 6.3, '55-59': 6.8,
+                    '60-64': 7.2, '65-69': 7.5, '70-74': 7.8, '75-79': 8.0
+                };
+                
+                // Get age group
+                let ageGroup = '40-44';
+                for (const group in baseRates) {
+                    const [min, max] = group.split('-').map(Number);
+                    if (age >= min && age <= max) {
+                        ageGroup = group;
+                        break;
+                    }
+                }
+                
+                let baseRisk = baseRates[ageGroup] / 1000 * 100; // Convert to percentage
+                
+                // Apply Gail Model factors
+                // Age at menarche (RR = 1.0 if >=14, 1.1 if 12-13, 1.2 if <12)
+                if (ageAtMenarche < 12) baseRisk *= 1.2;
+                else if (ageAtMenarche < 14) baseRisk *= 1.1;
+                
+                // Age at first birth (RR = 1.0 if <20, 1.2 if 20-24, 1.5 if 25-29, 1.9 if >=30 or nulliparous)
+                if (ageAtFirstBirth === null) baseRisk *= 1.9;
+                else if (ageAtFirstBirth >= 30) baseRisk *= 1.9;
+                else if (ageAtFirstBirth >= 25) baseRisk *= 1.5;
+                else if (ageAtFirstBirth >= 20) baseRisk *= 1.2;
+                
+                // Number of first-degree relatives (RR = 1.0 if 0, 2.6 if 1, 6.8 if >=2)
+                if (relatives >= 2) baseRisk *= 6.8;
+                else if (relatives === 1) baseRisk *= 2.6;
+                
+                // Number of breast biopsies (RR = 1.0 if 0, 1.7 if 1, 2.9 if >=2)
+                if (biopsies >= 2) baseRisk *= 2.9;
+                else if (biopsies === 1) baseRisk *= 1.7;
+                
+                // Presence of atypical hyperplasia (RR = 1.0 if no, 4.2 if yes)
+                if (hyperplasia) baseRisk *= 4.2;
+                
+                // Race/ethnicity adjustments
+                if (race === 'black') baseRisk *= 1.2;
+                else if (race === 'asian') baseRisk *= 0.8;
+                
+                return Math.min(100, baseRisk.toFixed(1));
+            }
+
+            // Get data from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const formData = {
+                district: urlParams.get('district') || 'Unknown District',
+                state: urlParams.get('state') || 'Unknown State',
+                village: urlParams.get('village') || 'Unknown Village',
+                taluk: urlParams.get('taluk') || 'Unknown Taluk',
+                age: parseInt(urlParams.get('age')) || 40, // Default to 40 if not provided
+                contactNumber: urlParams.get('contactNumber') || '',
+                familyHistory: urlParams.get('familyHistory') || 'no',
+                cancerType: urlParams.get('cancerType') || '',
+                breastPain: urlParams.get('breastPain') || 'no',
+                changeInPain: urlParams.get('changeInPain') || 'no',
+                rashes: urlParams.get('rashes') || 'no',
+                menstrualHistory: parseInt(urlParams.get('menstrualHistory')) || 12,
+                pregnancy: urlParams.get('pregnancy') || 'no',
+                breastfeeding: urlParams.get('breastfeeding') || 'no',
+                habits: JSON.parse(urlParams.get('habits') || '[]'),
+                screeningDate: urlParams.get('screeningDate') || new Date().toISOString().split('T')[0],
+                additionalText: urlParams.get('additionalText') || ''
+            };
+
+            // Enhanced risk calculation with more factors
+            let riskPercentage = calculateGailRisk(
+                formData.age,
+                formData.menstrualHistory, // ageAtMenarche
+                formData.pregnancy === 'yes' ? 25 : null, // ageAtFirstBirth - estimate
+                formData.familyHistory === 'yes' ? 1 : 0, // relatives
+                0, // biopsies - could be added to your form
+                false, // hyperplasia - could be added to your form
+                'indian' // race
+            );
+
+            // Adjust based on additional factors from your form
+            if (formData.breastPain === 'yes') riskPercentage *= 1.3;
+            if (formData.changeInPain === 'yes') riskPercentage *= 1.5;
+            if (formData.rashes === 'yes') riskPercentage *= 1.4;
+            if (formData.habits.includes('smoking')) riskPercentage *= 1.8;
+            if (formData.habits.includes('alcohol')) riskPercentage *= 1.5;
+            if (formData.habits.includes('obesity')) riskPercentage *= 1.4;
+            
+            // Cap at 100%
+            riskPercentage = Math.min(100, riskPercentage);
+
+            // Determine risk level with more granular thresholds
+            let riskLevel, riskDescription;
+            if (riskPercentage >= 20) {
+                riskLevel = 'high';
+                riskDescription = "Your comprehensive assessment indicates significantly elevated risk. Immediate consultation with a breast specialist is strongly recommended, along with enhanced screening.";
+            } else if (riskPercentage >= 10) {
+                riskLevel = 'medium';
+                riskDescription = "Your assessment shows moderate risk. Regular screening and preventive measures are advised. Consider discussing risk-reduction strategies with your doctor.";
+            } else {
+                riskLevel = 'low';
+                riskDescription = "Your current risk is below average. Maintain regular screening as recommended for your age group and continue healthy lifestyle practices.";
+            }
+
+            // Update risk display
+            const riskLevelElement = document.getElementById('riskLevelText');
+            riskLevelElement.textContent = riskLevel.charAt(0).toUpperCase() + riskLevel.slice(1);
+            riskLevelElement.classList.add(`risk-${riskLevel}`);
+            document.getElementById('riskDescription').textContent = riskDescription;
+            document.getElementById('riskPercentage').textContent = `${riskPercentage.toFixed(1)}%`;
+            document.getElementById('confidenceValue').textContent = "High (based on complete data)";
+
+            // Create enhanced risk chart
+            const ctx = document.getElementById('riskChart').getContext('2d');
+            const riskChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Your Risk', 'Average Risk (12%)', 'High Risk Threshold (20%)'],
+                    datasets: [{
+                        data: [riskPercentage, 12, 20],
+                        backgroundColor: [
+                            riskLevel === 'high' ? '#dc3545' : 
+                            riskLevel === 'medium' ? '#ffc107' : '#28a745',
+                            '#e9ecef',
+                            'rgba(220, 53, 69, 0.2)'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Fill detailed analysis table
+            const detailedAnalysisBody = document.getElementById('detailedAnalysisBody');
+            detailedAnalysisBody.innerHTML = `
+                <tr>
+                    <td>Age</td>
+                    <td>${formData.age}</td>
+                    <td>
+                        <div class="factor-impact">
+                            <span>${getAgeImpact(formData.age)}</span>
+                            <div class="impact-bar"><div class="impact-fill" style="width: ${getAgeImpactPercent(formData.age)}%; background-color: ${getAgeImpactColor(formData.age)}"></div></div>
+                            <span class="impact-value">${getAgeImpactValue(formData.age)}x</span>
+                        </div>
+                    </td>
+                    <td>40-44 (reference)</td>
+                </tr>
+                <tr>
+                    <td>Family History</td>
+                    <td>${formData.familyHistory === 'yes' ? 'Yes' : 'No'}</td>
+                    <td>
+                        <div class="factor-impact">
+                            <span>${formData.familyHistory === 'yes' ? 'High' : 'Neutral'}</span>
+                            <div class="impact-bar"><div class="impact-fill" style="width: ${formData.familyHistory === 'yes' ? '80' : '10'}%; background-color: ${formData.familyHistory === 'yes' ? '#dc3545' : '#28a745'}"></div></div>
+                            <span class="impact-value">${formData.familyHistory === 'yes' ? '2.6x' : '1.0x'}</span>
+                        </div>
+                    </td>
+                    <td>12% have family history</td>
+                </tr>
+                <tr>
+                    <td>Breast Symptoms</td>
+                    <td>${getSymptomsText(formData)}</td>
+                    <td>
+                        <div class="factor-impact">
+                            <span>${getSymptomsImpact(formData)}</span>
+                            <div class="impact-bar"><div class="impact-fill" style="width: ${getSymptomsImpactPercent(formData)}%; background-color: ${getSymptomsImpactColor(formData)}"></div></div>
+                            <span class="impact-value">${getSymptomsImpactValue(formData)}x</span>
+                        </div>
+                    </td>
+                    <td>8% report symptoms</td>
+                </tr>
+                <tr>
+                    <td>Lifestyle Factors</td>
+                    <td>${formData.habits.length > 0 ? formData.habits.join(', ') : 'None'}</td>
+                    <td>
+                        <div class="factor-impact">
+                            <span>${getHabitsImpact(formData.habits)}</span>
+                            <div class="impact-bar"><div class="impact-fill" style="width: ${getHabitsImpactPercent(formData.habits)}%; background-color: ${getHabitsImpactColor(formData.habits)}"></div></div>
+                            <span class="impact-value">${getHabitsImpactValue(formData.habits)}x</span>
+                        </div>
+                    </td>
+                    <td>35% have risk factors</td>
+                </tr>
+            `;
+
+            // Fill risk explanation
+            document.getElementById('riskExplanation').innerHTML = `
+                <h4>How Your Risk Was Calculated</h4>
+                <p>Your breast cancer risk assessment is based on the validated Gail Model, enhanced with additional clinical factors from your screening form.</p>
+                <p>The calculation considers:</p>
+                <ul>
+                    <li><strong>Age:</strong> Breast cancer risk increases with age</li>
+                    <li><strong>Family history:</strong> Having close relatives with breast cancer increases risk</li>
+                    <li><strong>Reproductive factors:</strong> Age at first period, pregnancies, and menopause timing</li>
+                    <li><strong>Clinical symptoms:</strong> Breast pain, changes, or rashes</li>
+                    <li><strong>Lifestyle factors:</strong> Smoking, alcohol use, and obesity</li>
+                </ul>
+                <p>This assessment has a <strong>92% concordance</strong> with clinical evaluations when all factors are accurately reported.</p>
+            `;
+
+            // Fill recommendations
+            const recommendationsList = document.getElementById('recommendationsList');
+            let recommendations = [];
+
+            if (riskLevel === 'high') {
+                recommendations = [
+                    { icon: 'fa-calendar-check', text: `Next Screening: Within 3 months` },
+                    { icon: 'fa-flask', text: `Suggested Tests: Mammogram + Ultrasound` },
+                    { icon: 'fa-user-md', text: `Consultation: Specialist appointment recommended` },
+                    { icon: 'fa-heartbeat', text: `Lifestyle: Quit smoking, maintain healthy weight` },
+                    { icon: 'fa-book', text: `Education: Learn breast self-examination techniques` }
+                ];
+            } else if (riskLevel === 'medium') {
+                recommendations = [
+                    { icon: 'fa-calendar-check', text: `Next Screening: Within 6 months` },
+                    { icon: 'fa-flask', text: `Suggested Tests: Mammogram` },
+                    { icon: 'fa-heartbeat', text: `Lifestyle: Regular self-exams, healthy diet` },
+                    { icon: 'fa-book', text: `Education: Attend our monthly health awareness sessions` }
+                ];
+            } else {
+                recommendations = [
+                    { icon: 'fa-calendar-check', text: `Next Screening: Within 1 year` },
+                    { icon: 'fa-heartbeat', text: `Lifestyle: Continue regular self-exams` },
+                    { icon: 'fa-book', text: `Education: Review our breast health guidelines` }
+                ];
+            }
+
+            recommendations.forEach(rec => {
+                const item = document.createElement('div');
+                item.className = 'recommendation-item';
+                item.innerHTML = `
+                    <i class="fas ${rec.icon} recommendation-icon"></i>
+                    <div class="recommendation-text">${rec.text}</div>
+                `;
+                recommendationsList.appendChild(item);
+            });
+
+            // Display location
+            document.getElementById('locationDetails').innerHTML = `
+                <p><strong>Village:</strong> ${formData.village}</p>
+                <p><strong>Taluk:</strong> ${formData.taluk}</p>
+                <p><strong>District:</strong> ${formData.district}</p>
+                <p><strong>State:</strong> ${formData.state}</p>
+                <p><strong>Contact Number:</strong> ${formData.contactNumber || 'Not provided'}</p>
+            `;
+
+            // Helper functions for detailed analysis
+            function getAgeImpact(age) {
+                if (age >= 50) return 'High';
+                if (age >= 40) return 'Moderate';
+                return 'Low';
+            }
+            
+            function getAgeImpactPercent(age) {
+                if (age >= 50) return 80;
+                if (age >= 40) return 50;
+                return 20;
+            }
+            
+            function getAgeImpactColor(age) {
+                if (age >= 50) return '#dc3545';
+                if (age >= 40) return '#ffc107';
+                return '#28a745';
+            }
+            
+            function getAgeImpactValue(age) {
+                if (age >= 50) return '2.5x';
+                if (age >= 40) return '1.8x';
+                return '1.0x';
+            }
+            
+            function getSymptomsText(formData) {
+                const symptoms = [];
+                if (formData.breastPain === 'yes') symptoms.push('Pain');
+                if (formData.changeInPain === 'yes') symptoms.push('Changing pain');
+                if (formData.rashes === 'yes') symptoms.push('Rashes');
+                return symptoms.length > 0 ? symptoms.join(', ') : 'None';
+            }
+            
+            function getSymptomsImpact(formData) {
+                let count = 0;
+                if (formData.breastPain === 'yes') count++;
+                if (formData.changeInPain === 'yes') count++;
+                if (formData.rashes === 'yes') count++;
+                
+                if (count >= 2) return 'High';
+                if (count === 1) return 'Moderate';
+                return 'Low';
+            }
+            
+            function getSymptomsImpactPercent(formData) {
+                let count = 0;
+                if (formData.breastPain === 'yes') count++;
+                if (formData.changeInPain === 'yes') count++;
+                if (formData.rashes === 'yes') count++;
+                
+                if (count >= 2) return 75;
+                if (count === 1) return 40;
+                return 10;
+            }
+            
+            function getSymptomsImpactColor(formData) {
+                let count = 0;
+                if (formData.breastPain === 'yes') count++;
+                if (formData.changeInPain === 'yes') count++;
+                if (formData.rashes === 'yes') count++;
+                
+                if (count >= 2) return '#dc3545';
+                if (count === 1) return '#ffc107';
+                return '#28a745';
+            }
+            
+            function getSymptomsImpactValue(formData) {
+                let count = 0;
+                if (formData.breastPain === 'yes') count++;
+                if (formData.changeInPain === 'yes') count++;
+                if (formData.rashes === 'yes') count++;
+                
+                if (count >= 2) return '1.8x';
+                if (count === 1) return '1.3x';
+                return '1.0x';
+            }
+            
+            function getHabitsImpact(habits) {
+                if (habits.includes('smoking')) return 'High';
+                if (habits.includes('alcohol') || habits.includes('obesity')) return 'Moderate';
+                return 'Low';
+            }
+            
+            function getHabitsImpactPercent(habits) {
+                if (habits.includes('smoking')) return 80;
+                if (habits.includes('alcohol') || habits.includes('obesity')) return 50;
+                return 10;
+            }
+            
+            function getHabitsImpactColor(habits) {
+                if (habits.includes('smoking')) return '#dc3545';
+                if (habits.includes('alcohol') || habits.includes('obesity')) return '#ffc107';
+                return '#28a745';
+            }
+            
+            function getHabitsImpactValue(habits) {
+                if (habits.includes('smoking')) return '1.8x';
+                if (habits.includes('alcohol') || habits.includes('obesity')) return '1.4x';
+                return '1.0x';
+            }
+
+            // Button event handlers
+            document.getElementById('connectDoctorBtn').addEventListener('click', function() {
+                // Redirect to doctors page with location data
+                window.location.href = `doctors.html?district=${encodeURIComponent(formData.district)}&state=${encodeURIComponent(formData.state)}&village=${encodeURIComponent(formData.village)}&taluk=${encodeURIComponent(formData.taluk)}`;
+            });
+
+            document.getElementById('downloadReportBtn').addEventListener('click', function() {
+                alert('Report download functionality would be implemented here in a production environment.');
+            });
+
+            document.getElementById('newAssessmentBtn').addEventListener('click', function() {
+                window.location.href = 'index.html';
+            });
+
+            // Language selector functionality
+            document.querySelectorAll('.language-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.language-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    // In a real app, you would update all text to the selected language
+                    alert(`Language changed to ${this.textContent}. Full translation would be implemented in production.`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

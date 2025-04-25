@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Health - Breast Cancer Screening</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== Global Styles ===== */
+        :root {
+            --primary: #2c7be5;
+            --primary-dark: #1a68d1;
+            --secondary: #e63946;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e9ecef;
+            --dark-gray: #495057;
+            --text-color: #212529;
+            --white: #ffffff;
+            --transition: all 0.3s ease;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --radius: 6px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--light-gray);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: #c1121f;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+
+        /* ===== Header & Navigation ===== */
+        header {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo-text span {
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            padding: 5px 0;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* ===== Main Content ===== */
+        main {
+            padding: 40px 0;
+            min-height: calc(100vh - 150px);
+        }
+
+        /* Form Section */
+        .form-section {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(44, 123, 229, 0.2);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .radio-group label,
+        .checkbox-group label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .address-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .consent-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .consent-group label {
+            font-weight: normal;
+            margin-bottom: 0;
+        }
+
+        /* Language Selector */
+        .language-selector {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .language-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: var(--radius);
+            margin-left: 5px;
+            font-weight: 600;
+        }
+
+        .language-btn.active {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* Results Section */
+        .results-section {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            display: none;
+        }
+
+        .risk-indicator {
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .risk-low {
+            background-color: #28a745;
+        }
+
+        .risk-medium {
+            background-color: #ffc107;
+            color: var(--text-color);
+        }
+
+        .risk-high {
+            background-color: #dc3545;
+        }
+
+        .recommendations {
+            margin-top: 20px;
+        }
+
+        .recommendations ul {
+            margin-left: 20px;
+        }
+
+        .recommendations li {
+            margin-bottom: 10px;
+            list-style-type: disc;
+        }
+
+        /* Offline Indicator */
+        .offline-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--secondary);
+            color: var(--white);
+            padding: 10px 15px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: none;
+            z-index: 1000;
+        }
+
+        /* ===== Footer ===== */
+        footer {
+            background-color: var(--primary-dark);
+            color: var(--white);
+            padding: 20px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        /* ===== Responsive Design ===== */
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .address-fields {
+                grid-template-columns: 1fr;
+            }
+
+            .radio-group,
+            .checkbox-group {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <span class="logo-text">Community<span>Health</span></span>
+            </div>
+            <nav class="nav-links">
+                <a href="#" class="active">Home</a>
+                <a href="signs.html">Signs</a>
+                <a href="doctors.html">Our best doctors</a>
+                <a href="result.html">Results</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Language Selector -->
+        <div class="language-selector">
+            <button class="language-btn active" data-lang="english">English</button>
+            <button class="language-btn" data-lang="hindi">हिन्दी</button>
+            <button class="language-btn" data-lang="kannada">ಕನ್ನಡ</button>
+        </div>
+
+        <!-- Form Section -->
+        <section class="form-section">
+            <h2 class="section-title" data-i18n="title">Breast Cancer Screening</h2>
+
+            <form id="screeningForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="age" data-i18n="age">Age:</label>
+                        <input type="number" id="age" name="age" class="form-control" required min="1" max="120">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contactNumber" data-i18n="contactNumber">Contact number:</label>
+                        <input type="tel" id="contactNumber" name="contactNumber" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label data-i18n="familyHistory">Family history of cancer:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="familyHistoryYes" name="familyHistory" value="yes" required>
+                        <label for="familyHistoryYes" data-i18n="yes">Yes</label>
+                        <input type="radio" id="familyHistoryNo" name="familyHistory" value="no">
+                        <label for="familyHistoryNo" data-i18n="no">No</label>
+                    </div>
+                    <div id="cancerTypeGroup" style="display: none; margin-top: 10px;">
+                        <select id="cancerType" name="cancerType" class="form-control">
+                            <option value="" data-i18n="selectType">Select cancer type</option>
+                            <option value="blood" data-i18n="bloodCancer">Blood cancer</option>
+                            <option value="breast" data-i18n="breastCancer">Breast cancer</option>
+                            <option value="lung" data-i18n="lungCancer">Lung cancer</option>
+                            <option value="skin" data-i18n="skinCancer">Skin cancer</option>
+                            <option value="other" data-i18n="other">Other</option>
+                        </select>
+                        <input type="text" id="otherCancerType" name="otherCancerType" class="form-control"
+                            placeholder="Specify cancer type" style="display: none; margin-top: 5px;">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label data-i18n="breastPain">Breast pain:</label>
+                        <select id="breastPain" name="breastPain" class="form-control" required>
+                            <option value="" data-i18n="selectOption">Select option</option>
+                            <option value="yes" data-i18n="yes">Yes</option>
+                            <option value="no" data-i18n="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-i18n="changeInPain">Change in breast pain:</label>
+                        <select id="changeInPain" name="changeInPain" class="form-control" required>
+                            <option value="" data-i18n="selectOption">Select option</option>
+                            <option value="yes" data-i18n="yes">Yes</option>
+                            <option value="no" data-i18n="no">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label data-i18n="rashes">Rashes in breast:</label>
+                        <select id="rashes" name="rashes" class="form-control" required>
+                            <option value="" data-i18n="selectOption">Select option</option>
+                            <option value="yes" data-i18n="yes">Yes</option>
+                            <option value="no" data-i18n="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="menstrualHistory" data-i18n="menstrualHistory">Months since last period:</label>
+                        <input type="number" id="menstrualHistory" name="menstrualHistory" class="form-control" min="0">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label data-i18n="pregnancyHistory">Pregnancy history:</label>
+                        <select id="pregnancy" name="pregnancy" class="form-control" required>
+                            <option value="" data-i18n="selectOption">Select option</option>
+                            <option value="yes" data-i18n="yes">Yes</option>
+                            <option value="no" data-i18n="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="breastfeedingGroup" style="display: none;">
+                        <label data-i18n="breastfeeding">Breastfeeding:</label>
+                        <select id="breastfeeding" name="breastfeeding" class="form-control">
+                            <option value="" data-i18n="selectOption">Select option</option>
+                            <option value="yes" data-i18n="yes">Yes</option>
+                            <option value="no" data-i18n="no">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label data-i18n="habits">Habits (select all that apply):</label>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="smoking" name="habits" value="smoking">
+                        <label for="smoking" data-i18n="smoking">Smoking</label>
+                        <input type="checkbox" id="alcohol" name="habits" value="alcohol">
+                        <label for="alcohol" data-i18n="alcohol">Alcohol</label>
+                        <input type="checkbox" id="obesity" name="habits" value="obesity">
+                        <label for="obesity" data-i18n="obesity">Obesity</label>
+                        <input type="checkbox" id="none" name="habits" value="None">
+                        <label for="none" data-i18n="other">None</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label data-i18n="area">Area:</label>
+                    <div class="address-fields">
+                        <input type="text" id="village" name="village" class="form-control" placeholder="Village"
+                            required data-i18n-ph="village">
+                        <input type="text" id="taluk" name="taluk" class="form-control" placeholder="Taluk" required
+                            data-i18n-ph="taluk">
+                        <input type="text" id="district" name="district" class="form-control" placeholder="District"
+                            required data-i18n-ph="district">
+                        <input type="text" id="state" name="state" class="form-control" placeholder="State" required
+                            data-i18n-ph="state">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="screeningDate" data-i18n="screeningDate">Date of screening:</label>
+                    <input type="date" id="screeningDate" name="screeningDate" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <div class="consent-group">
+                        <input type="checkbox" id="consent" name="consent" required>
+                        <label for="consent" data-i18n="consent">I consent to the screening and agree to the terms and
+                            conditions</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="additionalText" data-i18n="additionalInfo">Additional information:</label>
+                    <textarea id="additionalText" name="additionalText" rows="4" class="form-control"
+                        data-i18n-ph="additionalInfo"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" data-i18n="submit">View results</button>
+                    <button type="reset" class="btn btn-secondary" data-i18n="reset">Reset</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section" id="resultsSection">
+            <h2 class="section-title" data-i18n="resultsTitle">Screening Results</h2>
+
+            <div class="risk-indicator" id="riskIndicator">
+                Risk Level: Low
+            </div>
+
+            <h3 data-i18n="patientSummary">Patient Summary</h3>
+            <div id="patientSummary"></div>
+
+            <h3 data-i18n="recommendations">Recommendations</h3>
+            <div class="recommendations" id="recommendations">
+                <ul>
+                    <li data-i18n="rec1">No immediate action required</li>
+                    <li data-i18n="rec2">Regular self-examination recommended</li>
+                    <li data-i18n="rec3">Follow-up screening in 1 year</li>
+                </ul>
+            </div>
+
+            <button class="btn btn-primary" style="margin-top: 20px;" id="saveBtn" data-i18n="saveAssessment">
+                <i class="fas fa-save"></i> Save Assessment
+            </button>
+        </section>
+    </main>
+
+    <!-- Offline Indicator -->
+    <div class="offline-indicator" id="offlineIndicator">
+        <i class="fas fa-wifi"></i> <span data-i18n="offlineMessage">Working offline - data will sync when connection
+            returns</span>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 Community Health Breast Cancer Screening | For ASHA/Anganwadi Workers</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('screeningForm');
+            const pregnancyDropdown = document.getElementById('pregnancy');
+            const breastfeedingGroup = document.getElementById('breastfeedingGroup');
+            const breastfeedingDropdown = document.getElementById('breastfeeding');
+            const languageBtns = document.querySelectorAll('.language-btn');
+            const familyHistoryYes = document.getElementById('familyHistoryYes');
+            const familyHistoryNo = document.getElementById('familyHistoryNo');
+            const cancerTypeGroup = document.getElementById('cancerTypeGroup');
+            const cancerTypeDropdown = document.getElementById('cancerType');
+            const otherCancerType = document.getElementById('otherCancerType');
+            const resultsSection = document.getElementById('resultsSection');
+            const saveBtn = document.getElementById('saveBtn');
+            const offlineIndicator = document.getElementById('offlineIndicator');
+
+            // Enhanced translations object
+            const translations = {
+                english: {
+                    title: "Breast Cancer Screening",
+                    age: "Age:",
+                    familyHistory: "Family history of cancer:",
+                    yes: "Yes",
+                    no: "No",
+                    selectType: "Select cancer type",
+                    bloodCancer: "Blood cancer",
+                    breastCancer: "Breast cancer",
+                    lungCancer: "Lung cancer",
+                    skinCancer: "Skin cancer",
+                    other: "Other",
+                    breastPain: "Breast pain:",
+                    changeInPain: "Change in breast pain:",
+                    rashes: "Rashes in breast:",
+                    selectOption: "Select option",
+                    menstrualHistory: "Months since last period:",
+                    pregnancyHistory: "Pregnancy history:",
+                    breastfeeding: "Breastfeeding:",
+                    habits: "Habits (select all that apply):",
+                    smoking: "Smoking",
+                    alcohol: "Alcohol",
+                    obesity: "Obesity",
+                    area: "Area:",
+                    village: "Village",
+                    taluk: "Taluk",
+                    district: "District",
+                    state: "State",
+                    screeningDate: "Date of screening:",
+                    contactNumber: "Contact number:",
+                    consent: "I consent to the screening and agree to the terms and conditions",
+                    additionalInfo: "Additional information:",
+                    submit: "View results",
+                    reset: "Reset",
+                    resultsTitle: "Screening Results",
+                    patientSummary: "Patient Summary",
+                    recommendations: "Recommendations",
+                    rec1: "No immediate action required",
+                    rec2: "Regular self-examination recommended",
+                    rec3: "Follow-up screening in 1 year",
+                    saveAssessment: "Save Assessment",
+                    offlineMessage: "Working offline - data will sync when connection returns",
+                    fillRequired: "Please fill in all required fields",
+                    submitSuccess: "Form submitted successfully!"
+                },
+                hindi: {
+                    title: "स्तन कैंसर जांच फॉर्म",
+                    age: "आयु:",
+                    familyHistory: "कैंसर का पारिवारिक इतिहास:",
+                    yes: "हाँ",
+                    no: "नहीं",
+                    selectType: "कैंसर का प्रकार चुनें",
+                    bloodCancer: "ब्लड कैंसर",
+                    breastCancer: "स्तन कैंसर",
+                    lungCancer: "फेफड़ों का कैंसर",
+                    skinCancer: "त्वचा कैंसर",
+                    other: "अन्य",
+                    breastPain: "स्तन में दर्द:",
+                    changeInPain: "स्तन दर्द में परिवर्तन:",
+                    rashes: "स्तन पर चकत्ते:",
+                    selectOption: "विकल्प चुनें",
+                    menstrualHistory: "अंतिम अवधि के बाद से महीने:",
+                    pregnancyHistory: "गर्भावस्था इतिहास:",
+                    breastfeeding: "स्तनपान:",
+                    habits: "आदतें (लागू सभी चुनें):",
+                    smoking: "धूम्रपान",
+                    alcohol: "शराब",
+                    obesity: "मोटापा",
+                    area: "क्षेत्र:",
+                    village: "गाँव",
+                    taluk: "तालुका",
+                    district: "जिला",
+                    state: "राज्य",
+                    screeningDate: "जांच की तारीख:",
+                    contactNumber: "संपर्क नंबर:",
+                    consent: "मैं स्क्रीनिंग के लिए सहमति देता हूं और नियमों और शर्तों से सहमत हूं",
+                    additionalInfo: "अतिरिक्त जानकारी:",
+                    submit: "परिणाम देखें",
+                    reset: "रीसेट",
+                    resultsTitle: "जांच परिणाम",
+                    patientSummary: "रोगी सारांश",
+                    recommendations: "सिफारिशें",
+                    rec1: "तत्काल कार्रवाई की आवश्यकता नहीं",
+                    rec2: "नियमित स्व-परीक्षण की सिफारिश की गई",
+                    rec3: "1 वर्ष में अनुवर्ती जांच",
+                    saveAssessment: "मूल्यांकन सहेजें",
+                    offlineMessage: "ऑफलाइन काम कर रहे हैं - कनेक्शन वापस आने पर डेटा सिंक हो जाएगा",
+                    fillRequired: "कृपया सभी आवश्यक फ़ील्ड भरें",
+                    submitSuccess: "फॉर्म सफलतापूर्वक जमा हो गया!"
+                },
+                kannada: {
+                    title: "ಸ್ತನ ಕ್ಯಾನ್ಸರ್ ತಪಾಸಣೆ ಫಾರ್ಮ್",
+                    age: "ವಯಸ್ಸು:",
+                    familyHistory: "ಕ್ಯಾನ್ಸರ್ ಕುಟುಂಬ ಇತಿಹಾಸ:",
+                    yes: "ಹೌದು",
+                    no: "ಇಲ್ಲ",
+                    selectType: "ಕ್ಯಾನ್ಸರ್ ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆಮಾಡಿ",
+                    bloodCancer: "ರಕ್ತ ಕ್ಯಾನ್ಸರ್",
+                    breastCancer: "ಸ್ತನ ಕ್ಯಾನ್ಸರ್",
+                    lungCancer: "ಉಸಿರಾಟದ ಕ್ಯಾನ್ಸರ್",
+                    skinCancer: "ಚರ್ಮದ ಕ್ಯಾನ್ಸರ್",
+                    other: "ಇತರೆ",
+                    breastPain: "ಸ್ತನದ ನೋವು:",
+                    changeInPain: "ಸ್ತನದ ನೋವಿನಲ್ಲಿ ಬದಲಾವಣೆ:",
+                    rashes: "ಸ್ತನದ ಮೇಲೆ ಚರ್ಮದ ದದ್ದು:",
+                    selectOption: "ಆಯ್ಕೆಮಾಡಿ",
+                    menstrualHistory: "ಕೊನೆಯ ಅವಧಿಯಿಂದ ತಿಂಗಳುಗಳು:",
+                    pregnancyHistory: "ಗರ್ಭಧಾರಣೆ ಇತಿಹಾಸ:",
+                    breastfeeding: "ಸ್ತನಪಾನ:",
+                    habits: "ಅಭ್ಯಾಸಗಳು (ಅನ್ವಯಿಸುವ ಎಲ್ಲವನ್ನೂ ಆರಿಸಿ):",
+                    smoking: "ಧೂಮಪಾನ",
+                    alcohol: "ಮದ್ಯಪಾನ",
+                    obesity: "ಸ್ಥೂಲಕಾಯತೆ",
+                    area: "ಪ್ರದೇಶ:",
+                    village: "ಗ್ರಾಮ",
+                    taluk: "ತಾಲೂಕು",
+                    district: "ಜಿಲ್ಲೆ",
+                    state: "ರಾಜ್ಯ",
+                    screeningDate: "ತಪಾಸಣೆ ದಿನಾಂಕ:",
+                    contactNumber: "ಸಂಪರ್ಕ ಸಂಖ್ಯೆ:",
+                    consent: "ನಾನು ತಪಾಸಣೆಗೆ ಸಮ್ಮತಿಸುತ್ತೇನೆ ಮತ್ತು ನಿಯಮಗಳು ಮತ್ತು ಷರತ್ತುಗಳಿಗೆ ಸಮ್ಮತಿಸುತ್ತೇನೆ",
+                    additionalInfo: "ಹೆಚ್ಚುವರಿ ಮಾಹಿತಿ:",
+                    submit: "ಫಲಿತಾಂಶಗಳನ್ನು ವೀಕ್ಷಿಸಿ",
+                    reset: "ಮರುಹೊಂದಿಸಿ",
+                    resultsTitle: "ತಪಾಸಣೆ ಫಲಿತಾಂಶಗಳು",
+                    patientSummary: "ರೋಗಿ ಸಾರಾಂಶ",
+                    recommendations: "ಶಿಫಾರಸುಗಳು",
+                    rec1: "ತಕ್ಷಣದ ಕ್ರಮ ಅಗತ್ಯವಿಲ್ಲ",
+                    rec2: "ನಿಯಮಿತ ಸ್ವ-ಪರೀಕ್ಷೆ ಶಿಫಾರಸು ಮಾಡಲಾಗಿದೆ",
+                    rec3: "1 ವರ್ಷದಲ್ಲಿ ಫಾಲೋ-ಅಪ್ ತಪಾಸಣೆ",
+                    saveAssessment: "ಮೌಲ್ಯಮಾಪನ ಉಳಿಸಿ",
+                    offlineMessage: "ಆಫ್ಲೈನ್‌ನಲ್ಲಿ ಕೆಲಸ ಮಾಡುತ್ತಿದೆ - ಸಂಪರ್ಕ ಹಿಂತಿರುಗಿದಾಗ ಡೇಟಾ ಸಿಂಕ್ ಆಗುತ್ತದೆ",
+                    fillRequired: "ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಅಗತ್ಯವಿರುವ ಫೀಲ್ಡ್‌ಗಳನ್ನು ಪೂರಿಸಿ",
+                    submitSuccess: "ಫಾರ್ಮ್ ಯಶಸ್ವಿಯಾಗಿ ಸಲ್ಲಿಸಲಾಗಿದೆ!"
+                }
+            };
+
+            // Show/hide breastfeeding field based on pregnancy selection
+            pregnancyDropdown.addEventListener('change', function () {
+                if (this.value === 'yes') {
+                    breastfeedingGroup.style.display = 'block';
+                    breastfeedingDropdown.required = true;
+                } else {
+                    breastfeedingGroup.style.display = 'none';
+                    breastfeedingDropdown.required = false;
+                    breastfeedingDropdown.value = '';
+                }
+            });
+
+            // Show/hide cancer type fields based on family history
+            familyHistoryYes.addEventListener('change', function () {
+                if (this.checked) {
+                    cancerTypeGroup.style.display = 'block';
+                    cancerTypeDropdown.required = true;
+                }
+            });
+
+            familyHistoryNo.addEventListener('change', function () {
+                if (this.checked) {
+                    cancerTypeGroup.style.display = 'none';
+                    cancerTypeDropdown.required = false;
+                    cancerTypeDropdown.value = '';
+                    otherCancerType.style.display = 'none';
+                    otherCancerType.value = '';
+                }
+            });
+
+            // Show/hide other cancer type field
+            cancerTypeDropdown.addEventListener('change', function () {
+                if (this.value === 'other') {
+                    otherCancerType.style.display = 'block';
+                    otherCancerType.required = true;
+                } else {
+                    otherCancerType.style.display = 'none';
+                    otherCancerType.required = false;
+                    otherCancerType.value = '';
+                }
+            });
+
+            // Form submission handler
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                // Scroll to first invalid field if form is invalid
+                // REPLACE the existing form submit handler in index.html with this:
+                form.addEventListener('submit', function (e) {
+                    e.preventDefault();
+
+                    // Validate form
+                    if (!form.checkValidity()) {
+                        const firstInvalid = form.querySelector(':invalid');
+                        if (firstInvalid) {
+                            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            firstInvalid.focus();
+                            alert(getTranslation('fillRequired'));
+                            return;
+                        }
+                    }
+
+                    // Collect all form data
+                    const formData = {
+                        age: document.getElementById('age').value,
+                        contactNumber: document.getElementById('contactNumber').value,
+                        familyHistory: document.querySelector('input[name="familyHistory"]:checked').value,
+                        cancerType: document.getElementById('cancerType').value,
+                        otherCancerType: document.getElementById('otherCancerType').value,
+                        breastPain: document.getElementById('breastPain').value,
+                        changeInPain: document.getElementById('changeInPain').value,
+                        rashes: document.getElementById('rashes').value,
+                        menstrualHistory: document.getElementById('menstrualHistory').value,
+                        pregnancy: document.getElementById('pregnancy').value,
+                        breastfeeding: document.getElementById('breastfeeding').value,
+                        habits: Array.from(document.querySelectorAll('input[name="habits"]:checked')).map(el => el.value),
+                        village: document.getElementById('village').value,
+                        taluk: document.getElementById('taluk').value,
+                        district: document.getElementById('district').value,
+                        state: document.getElementById('state').value,
+                        screeningDate: document.getElementById('screeningDate').value,
+                        additionalText: document.getElementById('additionalText').value
+                    };
+
+                    // Convert to URL parameters
+                    const params = new URLSearchParams();
+                    for (const key in formData) {
+                        if (typeof formData[key] === 'object') {
+                            params.append(key, JSON.stringify(formData[key]));
+                        } else {
+                            params.append(key, formData[key]);
+                        }
+                    }
+
+                    // Redirect to result.html with all data
+                    window.location.href = `result.html?${params.toString()}`;
+                });
+                // Here you would typically send the data to a server
+                console.log('Form data:', formData);
+
+                // For demo purposes, we'll show the results section
+                resultsSection.style.display = 'block';
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+
+                // Update patient summary
+                document.getElementById('patientSummary').innerHTML = `
+                    <p><strong>${getTranslation('age')}</strong> ${formData.age}</p>
+                    <p><strong>${getTranslation('familyHistory')}</strong> ${formData.familyHistory === 'yes' ? getTranslation('yes') : getTranslation('no')}</p>
+                    <p><strong>${getTranslation('village')}:</strong> ${formData.village}</p>
+                    <p><strong>${getTranslation('district')}:</strong> ${formData.district}</p>
+                `;
+
+                // For demo, we'll just show an alert
+                alert(getTranslation('submitSuccess'));
+            });
+
+            // Language selector functionality
+            languageBtns.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    languageBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    updateTranslations(this.dataset.lang);
+                });
+            });
+
+            // Function to update translations
+            function updateTranslations(lang) {
+                const langData = translations[lang];
+                document.querySelectorAll('[data-i18n]').forEach(element => {
+                    const key = element.getAttribute('data-i18n');
+                    if (langData[key]) {
+                        if (element.tagName === 'INPUT' && (element.type === 'button' || element.type === 'submit' || element.type === 'reset')) {
+                            element.value = langData[key];
+                        } else {
+                            element.textContent = langData[key];
+                        }
+                    }
+                });
+
+                // Update placeholders
+                document.querySelectorAll('[data-i18n-ph]').forEach(element => {
+                    const key = element.getAttribute('data-i18n-ph');
+                    if (langData[key]) {
+                        element.placeholder = langData[key];
+                    }
+                });
+            }
+
+            // Helper function to get translation
+            function getTranslation(key) {
+                const lang = document.querySelector('.language-btn.active').dataset.lang;
+                return translations[lang][key] || key;
+            }
+
+            // Set today's date as default for screening date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('screeningDate').value = today;
+
+            // Offline detection
+            window.addEventListener('online', updateOnlineStatus);
+            window.addEventListener('offline', updateOnlineStatus);
+
+            function updateOnlineStatus() {
+                if (!navigator.onLine) {
+                    offlineIndicator.style.display = 'block';
+                } else {
+                    offlineIndicator.style.display = 'none';
+                }
+            }
+
+            // Check initial status
+            updateOnlineStatus();
+
+            // Save button functionality
+            saveBtn.addEventListener('click', function () {
+                alert(getTranslation('submitSuccess'));
+            });
+
+            // Initialize with English translations
+            updateTranslations('english');
+        });
+    </script>
+</body>
+
+</html>
